@@ -40,8 +40,10 @@ async function fetchAndStoreUserData(user) {
     console.log("⚠️ User document not found in Firestore.");
   }
 }
-// const loader = document.getElementById("loader");
-// loader.style.display = "none";
+const loader = document.getElementById("loader");
+if (loader) {
+  loader.style.display = "none";
+}
 
 const signInButton = document.getElementById("loginbtn");
 const email = document.getElementById("email");
@@ -51,29 +53,34 @@ const feedback = document.getElementById("invalid-feedback");
 //if (window.location.pathname === "index.html") {
 //Get a reference to the elements
 if (window.location.pathname.includes("index.html")) {
-  signInButton.addEventListener("click", () => {
-    console.log("Logging in...");
+  if (signInButton) {
+    signInButton.addEventListener("click", () => {
+      console.log("Logging in...");
 
-    loader.style.display = "block";
-    if (validateEmail() && validatePassword()) {
-      const emailVal = email.value.trim();
-      const passwordVal = password.value;
+      if (loader) loader.style.display = "block";
 
-      if (emailVal !== "" && passwordVal !== "") {
-        signInWithEmailAndPassword(auth, emailVal, passwordVal)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            fetchAndStoreUserData(user); // Store the data
-            window.location.href = "dashboard.html";
-          })
-          .catch((error) => {
-            alert("Authentication failed: " + error.message);
-            showError(error.message);
-            loader.style.display = "none";
-          });
+      if (validateEmail() && validatePassword()) {
+        const emailVal = email.value.trim();
+        const passwordVal = password.value;
+
+        if (emailVal !== "" && passwordVal !== "") {
+          signInWithEmailAndPassword(auth, emailVal, passwordVal)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              fetchAndStoreUserData(user); // Store the data
+              window.location.href = "dashboard.html";
+            })
+            .catch((error) => {
+              alert("Authentication failed: " + error.message);
+              showError(error.message);
+              if (loader) loader.style.display = "none";
+            });
+        }
+      } else {
+        if (loader) loader.style.display = "none";
       }
-    }
-  });
+    });
+  }
 }
 function validatePassword() {
   if (password.value.length < 6) {
@@ -99,8 +106,10 @@ function validateEmail() {
 
 // Utility to show error
 function showError(message) {
-  feedback.textContent = message;
-  feedback.style.display = "block";
+  if (feedback) {
+    feedback.textContent = message;
+    feedback.style.display = "block";
+  }
 }
 
 if (!window.location.pathname.includes("index.html")) {
@@ -108,9 +117,13 @@ if (!window.location.pathname.includes("index.html")) {
   const loginLink = document.getElementById("accountLink");
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const displayName = user.displayName || user.email.split("@")[0];
-      userNamePlaceholder.textContent = `Welcome back, ${displayName}`;
-      loginLink.setAttribute("href", "account.html");
+      if (userNamePlaceholder) {
+        const displayName = user.displayName || user.email.split("@")[0];
+        userNamePlaceholder.textContent = `Welcome back, ${displayName}`;
+      }
+      if (loginLink) {
+        loginLink.setAttribute("href", "account.html");
+      }
       const userRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(userRef);
       if (docSnap.exists()) {
@@ -119,8 +132,12 @@ if (!window.location.pathname.includes("index.html")) {
       }
       console.log("✅ User is logged in.");
     } else {
-      userNamePlaceholder.textContent = "Login / Sign Up";
-      loginLink.setAttribute("href", "login.html");
+      if (userNamePlaceholder) {
+        userNamePlaceholder.textContent = "Login / Sign Up";
+      }
+      if (loginLink) {
+        loginLink.setAttribute("href", "login.html");
+      }
       console.log("🚫 No user is logged in.");
     }
   });
