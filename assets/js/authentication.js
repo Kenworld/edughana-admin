@@ -53,6 +53,11 @@ const feedback = document.getElementById("invalid-feedback");
 //if (window.location.pathname === "index.html") {
 //Get a reference to the elements
 if (window.location.pathname.includes("index.html")) {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      window.location.href = "dashboard.html";
+    }
+  });
   if (signInButton) {
     signInButton.addEventListener("click", () => {
       console.log("Logging in...");
@@ -142,11 +147,6 @@ if (!window.location.pathname.includes("index.html")) {
     }
   });
 }
-// onAuthStateChanged(auth, async (user) => {
-//   if (user) {
-//     window.location.href = "dashboard.html";
-//   }
-// });
 
 // Admin authentication check
 export async function checkAdminAuth() {
