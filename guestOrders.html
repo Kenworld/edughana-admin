@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link href="/assets/media/logo.png" rel="icon">
-    <title>Edushop Pending orders</title>
+    <title>Edushop Guest orders</title>
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -179,7 +179,14 @@
             </nav>
             <!-- Navbar End -->
             <div class="bg-light rounded h-100 p-4">
-                <h3 class="mb-4">Complted Orders List</h3>
+                <h3 class="mb-4">Guest Orders List</h3>
+                <div class="mb-3">
+                    <select name="filterGuestOrders" id="filterGuestOrders">
+                        <option value="All">All Orders</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Uncompleted">Uncompleted</option>
+                    </select>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -224,6 +231,7 @@
 
     </div>
     </div>
+
     <!-- Order Details Modal -->
     <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
         aria-hidden="true">
@@ -244,6 +252,7 @@
             </div>
         </div>
     </div>
+
     <!-- JavaScript Libraries -->
     <script src="/assets/libs/jquery/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -256,7 +265,7 @@
     <script src="/assets/libs/chart/chart.min.js"></script>
     <script src="/assets/libs/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
     <script src="/assets/js/main.js" type="module"></script>
-    <script type="module" src="/assets/js/completedOrders .js"></script>
+    <script type="module" src="/assets/js/allGuestOrders.js"></script>
 </body>
 
 </html>

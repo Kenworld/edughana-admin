@@ -226,6 +226,14 @@ if (!window.location.pathname.includes("index.html")) {
               stock: parseInt(document.getElementById("stock").value) || 0,
               isActive: document.getElementById("isActive").checked,
               isFeatured: document.getElementById("isFeatured").checked,
+              color: document.getElementById("color").value,
+              washable: document.getElementById("washable").value,
+              sellingQty:
+                parseInt(document.getElementById("sellingQty").value) || 1,
+              type: document.getElementById("type").value,
+              nextDayDelivery: document.getElementById("nextDayDelivery").value,
+              weight:
+                parseFloat(document.getElementById("weight").value) || null,
               shortDescription: quill.root.innerHTML,
               longDescription: quill2.root.innerHTML,
               createdAt: new Date(),

@@ -77,6 +77,9 @@
                             <a href="canceledorders.html" class="dropdown-item">Cancelled</a>
                         </div>
                     </div>
+                    <div class="nav-item ">
+                        <a href="guestOrders.html" class="nav-link"><i class="far fa-user me-2"></i>Guest Orders</a>
+                    </div>
             </nav>
         </div>
         <!-- Sidebar end -->
@@ -191,56 +194,8 @@
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                    value="option1">
-                                </td>
-                            </th>
-                            <td>A3ADFF44A</td>
-                            <td>John Doe Snr</td>
-                            <td>GHS 540</td>
-                            <td class="text-warning">Pending</td>
+                    <tbody id="ordersTableBody">
 
-
-
-                            <td>
-                                <a href="edit_product.html" class="btn btn-sm btn-primary">Edit</a>
-                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" id="inlineCheckbox2"
-                                    value="option2">
-                                </td>
-                            </th>
-                            <td>00FF44A</td>
-                            <td>John Doe Snr</td>
-                            <td>GHS 540</td>
-                            <td class="text-success">Completed</td>
-
-
-                            <td>
-                                <a href="edit_product.html" class="btn btn-sm btn-primary">Edit</a>
-                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" id="inlineCheckbox3"
-                                    value="option3">
-                            </th>
-                            <td>NewOrder123</td>
-                            <td>Jane Doe</td>
-                            <td>GHS 600</td>
-                            <td class="text-danger">Canceled</td>
-                            <td>
-                                <a href="edit_product.html" class="btn btn-sm btn-primary">Edit</a>
-                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
                 <!-- Pagination Section -->
@@ -281,7 +236,29 @@
     <script src="/assets/libs/owlcarousel/owl.carousel.min.js"></script>
     <script src="/assets/libs/chart/chart.min.js"></script>
     <script src="/assets/libs/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js" type="module"></script>
+    <script type="module" src="/assets/js/allorders.js"></script>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsBody">
+                    <!-- Order details will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="cancelOrderBtn">Cancel Order</button>
+                    <button type="button" class="btn btn-success" id="acceptOrderBtn">Accept Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
