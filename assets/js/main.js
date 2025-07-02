@@ -216,24 +216,32 @@ if (!window.location.pathname.includes("index.html")) {
             // Get form values
             const productData = {
               name: document.getElementById("productName").value,
+              lowercase_name: document
+                .getElementById("productName")
+                .value.toLowerCase(),
               category: document.getElementById("productCategory").value,
-              brandName: document.getElementById("brandName").value || null,
-              productCode: document.getElementById("productCode").value,
+              subcategory: document.getElementById("productSubcategory").value,
+              material: document.getElementById("productMaterial").value,
+              ageGroup: document.getElementById("productAgeGroup").value,
+              useCase: document.getElementById("productUseCase").value,
+              brandName: document.getElementById("brandName")?.value || null,
+              productCode: document.getElementById("productCode")?.value,
               price: parseFloat(document.getElementById("price").value),
-              salePrice: document.getElementById("salePrice").value
+              salePrice: document.getElementById("salePrice")?.value
                 ? parseFloat(document.getElementById("salePrice").value)
                 : null,
-              stock: parseInt(document.getElementById("stock").value) || 0,
-              isActive: document.getElementById("isActive").checked,
-              isFeatured: document.getElementById("isFeatured").checked,
-              color: document.getElementById("color").value,
-              washable: document.getElementById("washable").value,
+              stock: parseInt(document.getElementById("stock")?.value) || 0,
+              isActive: document.getElementById("isActive")?.checked,
+              isFeatured: document.getElementById("isFeatured")?.checked,
+              color: document.getElementById("color")?.value,
+              washable: document.getElementById("washable")?.value,
               sellingQty:
-                parseInt(document.getElementById("sellingQty").value) || 1,
-              type: document.getElementById("type").value,
-              nextDayDelivery: document.getElementById("nextDayDelivery").value,
+                parseInt(document.getElementById("sellingQty")?.value) || 1,
+              type: document.getElementById("type")?.value,
+              nextDayDelivery:
+                document.getElementById("nextDayDelivery")?.value,
               weight:
-                parseFloat(document.getElementById("weight").value) || null,
+                parseFloat(document.getElementById("weight")?.value) || null,
               shortDescription: quill.root.innerHTML,
               longDescription: quill2.root.innerHTML,
               createdAt: new Date(),
@@ -312,6 +320,99 @@ if (!window.location.pathname.includes("index.html")) {
             alert("Error adding product. Please try again.");
           }
         });
+
+      // --- CATEGORY & SUBCATEGORY LOGIC ---
+      const categoryMap = {
+        "Classroom Furniture": [
+          "Student Desks",
+          "Student Chairs",
+          "Teacher Desks",
+          "Bookshelves",
+          "Whiteboards",
+          "Lockers",
+        ],
+        "Playground Equipment": [
+          "Slides",
+          "Swings",
+          "Merry-Go-Rounds",
+          "Jungle Gyms",
+          "Monkey Bars",
+          "Climbing Structures",
+        ],
+        "Indoor Play Items": [
+          "Play Kitchens",
+          "Activity Tables",
+          "Foam Blocks",
+          "Climbing Frames",
+        ],
+        "Outdoor Play Items": [
+          "Ride-on Toys",
+          "Playhouses",
+          "Sandpits",
+          "Seesaws",
+          "Trampolines",
+        ],
+        "Multipurpose Learning Zones": [
+          "Reading Corners",
+          "Sensory Play Zones",
+          "Art Stations",
+        ],
+        "Teacher & Admin Furniture": [
+          "Staff Chairs",
+          "Office Desks",
+          "Reception Counters",
+          "Storage Cabinets",
+        ],
+        "Cribs & Cradles": [
+          "Wooden Cribs",
+          "Metal Cradles",
+          "Baby Sleeping Mats",
+          "Bassinets",
+        ],
+        "Montessori Equipment": [
+          "Sandpaper Letters",
+          "Bead Frames",
+          "Puzzle Boards",
+          "Counting Trays",
+          "Learning Towers",
+        ],
+        Stationery: [
+          "Pens",
+          "Pencils",
+          "Notebooks",
+          "Markers",
+          "Folders",
+          "Erasers",
+        ],
+        "Digital Learning Tools": [
+          "Flat Panels and Interactive Whiteboards",
+          "Tablets",
+          "Desktops",
+          "All in One PCs",
+          "Educational Software",
+        ],
+        "Arts & Crafts": ["Crayons", "Paint", "Brushes", "Coloring Books"],
+        "Science Lab Equipment": ["Beakers", "Microscopes", "Lab Kits"],
+      };
+      const categorySelect = document.getElementById("productCategory");
+      const subcategorySelect = document.getElementById("productSubcategory");
+      categorySelect.addEventListener("change", function () {
+        const selected = this.value;
+        subcategorySelect.innerHTML =
+          '<option selected disabled value="">Choose...</option>';
+        if (categoryMap[selected]) {
+          categoryMap[selected].forEach((sub) => {
+            const opt = document.createElement("option");
+            opt.value = sub;
+            opt.textContent = sub;
+            subcategorySelect.appendChild(opt);
+          });
+          subcategorySelect.disabled = false;
+        } else {
+          subcategorySelect.disabled = true;
+        }
+      });
+      // --- END CATEGORY & SUBCATEGORY LOGIC ---
     }
 
     // Spinner
@@ -425,8 +526,10 @@ if (!window.location.pathname.includes("index.html")) {
             // Populate modal fields
             document.getElementById("editProductId").value = productId;
             document.getElementById("editProductName").value = product.name;
-            document.getElementById("editProductCategory").value =
-              product.category;
+            setEditProductCategoryAndSubcategory(
+              product.category,
+              product.subcategory
+            );
             document.getElementById("editProductBrand").value =
               product.brandName || "";
             document.getElementById("editProductPrice").value = product.price;

@@ -187,27 +187,66 @@
                                 <div class="bg-light rounded h-100 p-4">
                                     <h6 class="mb-4">Product Details</h6>
                                     <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="productName" placeholder="">
-                                                <label for="productName">Product Name</label>
-                                            </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="productName" class="form-label">Product Name</label>
+                                            <input type="text" class="form-control" id="productName" placeholder="">
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-floating mb-3">
-                                                <select class="form-select" id="productCategory"
-                                                    aria-label="Floating label select example">
-                                                    <option selected>Choose Category</option>
-                                                    <option value="Stationery">Stationery</option>
-                                                    <option value="Furniture">Furniture</option>
-                                                    <option value="Computers">Computers</option>
-                                                    <option value="Uniforms">Uniforms</option>
-                                                    <option value="Interactive Boards">Interactive Boards</option>
-                                                    <option value="Playgrounds">Playgrounds</option>
-                                                    <option value="Generic">Generic</option>
-                                                </select>
-                                                <label for="productCategory">Category</label>
-                                            </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="productCategory" class="form-label">Category</label>
+                                            <select class="form-select" id="productCategory" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option value="Classroom Furniture">Classroom Furniture</option>
+                                                <option value="Playground Equipment">Playground Equipment</option>
+                                                <option value="Indoor Play Items">Indoor Play Items</option>
+                                                <option value="Outdoor Play Items">Outdoor Play Items</option>
+                                                <option value="Multipurpose Learning Zones">Multipurpose Learning Zones
+                                                </option>
+                                                <option value="Teacher & Admin Furniture">Teacher & Admin Furniture
+                                                </option>
+                                                <option value="Cribs & Cradles">Cribs & Cradles</option>
+                                                <option value="Montessori Equipment">Montessori Equipment</option>
+                                                <option value="Stationery">Stationery</option>
+                                                <option value="Digital Learning Tools">Digital Learning Tools</option>
+                                                <option value="Arts & Crafts">Arts & Crafts</option>
+                                                <option value="Science Lab Equipment">Science Lab Equipment</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="productSubcategory" class="form-label">Subcategory</label>
+                                            <select class="form-select" id="productSubcategory" required>
+                                                <option selected disabled value="">Choose category first...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="productMaterial" class="form-label">Material</label>
+                                            <select class="form-select" id="productMaterial" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option>Wood</option>
+                                                <option>Plastic</option>
+                                                <option>Metal</option>
+                                                <option>Mixed</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="productAgeGroup" class="form-label">Age Group</label>
+                                            <select class="form-select" id="productAgeGroup" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option>Pre-School</option>
+                                                <option>Nursery</option>
+                                                <option>KG</option>
+                                                <option>Primary</option>
+                                                <option>JHS</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="productUseCase" class="form-label">Use Case</label>
+                                            <select class="form-select" id="productUseCase" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option>Indoor</option>
+                                                <option>Outdoor</option>
+                                                <option>Classroom</option>
+                                                <option>Admin</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
@@ -268,16 +307,16 @@
                                                 <label for="weight">Weight (kg)</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-6">
-                                            <label for="floatingInput">Short Description</label>
-                                            <div class="form-floating mb-3" id="editor">
-
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label for="editor" class="form-label">Short Description</label>
+                                                <div id="editor" style="height: 120px;"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-6">
-                                            <div><label for="floatingInput">Long Description</label></div>
-                                            <div class="form-floating mb-3" id="editor2">
-
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label for="editor2" class="form-label">Long Description</label>
+                                                <div id="editor2" style="height: 200px;"></div>
                                             </div>
                                         </div>
                                     </div>

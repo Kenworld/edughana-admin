@@ -245,14 +245,36 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="editProductCategory" class="form-label">Category</label>
-                                <input type="text" class="form-control" id="editProductCategory" required>
+                                <select class="form-select" id="editProductCategory" required>
+                                    <option selected disabled value="">Choose...</option>
+                                    <option value="Classroom Furniture">Classroom Furniture</option>
+                                    <option value="Playground Equipment">Playground Equipment</option>
+                                    <option value="Indoor Play Items">Indoor Play Items</option>
+                                    <option value="Outdoor Play Items">Outdoor Play Items</option>
+                                    <option value="Multipurpose Learning Zones">Multipurpose Learning Zones</option>
+                                    <option value="Teacher & Admin Furniture">Teacher & Admin Furniture</option>
+                                    <option value="Cribs & Cradles">Cribs & Cradles</option>
+                                    <option value="Montessori Equipment">Montessori Equipment</option>
+                                    <option value="Stationery">Stationery</option>
+                                    <option value="Digital Learning Tools">Digital Learning Tools</option>
+                                    <option value="Arts & Crafts">Arts & Crafts</option>
+                                    <option value="Science Lab Equipment">Science Lab Equipment</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
+                                <label for="editProductSubcategory" class="form-label">Subcategory</label>
+                                <select class="form-select" id="editProductSubcategory" required>
+                                    <option selected disabled value="">Choose category first...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="editProductBrand" class="form-label">Brand Name</label>
                                 <input type="text" class="form-control" id="editProductBrand">
                             </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="editProductStock" class="form-label">Stock</label>
                                 <input type="number" class="form-control" id="editProductStock" min="0">
@@ -320,6 +342,79 @@
     <script src="/assets/libs/waypoints/waypoints.min.js"></script>
     <script src="/assets/libs/owlcarousel/owl.carousel.min.js"></script>
     <script src="/assets/libs/chart/chart.min.js"></script>
+    <script>
+        // Category to Subcategory mapping
+        const categoryMap = {
+            "Classroom Furniture": [
+                "Student Desks", "Student Chairs", "Teacher Desks", "Bookshelves", "Whiteboards", "Lockers"
+            ],
+            "Playground Equipment": [
+                "Slides", "Swings", "Merry-Go-Rounds", "Jungle Gyms", "Monkey Bars", "Climbing Structures"
+            ],
+            "Indoor Play Items": [
+                "Play Kitchens", "Activity Tables", "Foam Blocks", "Climbing Frames"
+            ],
+            "Outdoor Play Items": [
+                "Ride-on Toys", "Playhouses", "Sandpits", "Seesaws", "Trampolines"
+            ],
+            "Multipurpose Learning Zones": [
+                "Reading Corners", "Sensory Play Zones", "Art Stations"
+            ],
+            "Teacher & Admin Furniture": [
+                "Staff Chairs", "Office Desks", "Reception Counters", "Storage Cabinets"
+            ],
+            "Cribs & Cradles": [
+                "Wooden Cribs", "Metal Cradles", "Baby Sleeping Mats", "Bassinets"
+            ],
+            "Montessori Equipment": [
+                "Sandpaper Letters", "Bead Frames", "Puzzle Boards", "Counting Trays", "Learning Towers"
+            ],
+            "Stationery": [
+                "Pens", "Pencils", "Notebooks", "Markers", "Folders", "Erasers"
+            ],
+            "Digital Learning Tools": [
+                "Flat Panels and Interactive Whiteboards", "Tablets", "Desktops", "All in One PCs", "Educational Software"
+            ],
+            "Arts & Crafts": [
+                "Crayons", "Paint", "Brushes", "Coloring Books"
+            ],
+            "Science Lab Equipment": [
+                "Beakers", "Microscopes", "Lab Kits"
+            ]
+        };
+
+        const editCategory = document.getElementById('editProductCategory');
+        const editSubcategory = document.getElementById('editProductSubcategory');
+
+        // Populate subcategories when category changes
+        editCategory.addEventListener('change', function () {
+            const selected = this.value;
+            editSubcategory.innerHTML = '<option selected disabled value="">Choose...</option>';
+            if (categoryMap[selected]) {
+                categoryMap[selected].forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.textContent = sub;
+                    editSubcategory.appendChild(opt);
+                });
+                editSubcategory.disabled = false;
+            } else {
+                editSubcategory.disabled = true;
+            }
+        });
+
+        // Helper to set category and subcategory when opening the modal
+        window.setEditProductCategoryAndSubcategory = function (category, subcategory) {
+            editCategory.value = category;
+            // Trigger change to populate subcategories
+            const event = new Event('change');
+            editCategory.dispatchEvent(event);
+            // Set subcategory after options are populated
+            setTimeout(() => {
+                editSubcategory.value = subcategory;
+            }, 0);
+        };
+    </script>
 </body>
 
 </html>
