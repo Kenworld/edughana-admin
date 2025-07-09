@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/media/logo.png" rel="icon">
+    <title>Edit Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/libs/owlcarousel/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/libs/tempusdominus/css/tempusdominus-bootstrap-4.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container pt-4 px-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h6 class="mb-4">Edit Blog</h6>
+                <form id="blogForm" class="mb-4">
+                    <div class="mb-3">
+                        <label for="blogTitle" class="form-label">Blog Title</label>
+                        <input type="text" class="form-control" id="blogTitle" name="blogTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="authorName" class="form-label">Author Name</label>
+                        <input type="text" class="form-control" id="authorName" name="authorName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blogContent" class="form-label">Content</label>
+                        <div id="blogContent" style="height: 200px;"></div>
+                        <input type="hidden" name="blogContentHtml" id="blogContentHtml">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Featured Image</label>
+                        <input type="url" class="form-control" id="featuredImageUrl" name="featuredImageUrl"
+                            placeholder="Paste image URL">
+                        <div class="featured-preview mt-2"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Other Images (optional)</label>
+                        <input type="url" class="form-control mb-1" id="otherImageUrl1" name="otherImageUrl1"
+                            placeholder="Paste image URL 1">
+                        <input type="url" class="form-control mb-1" id="otherImageUrl2" name="otherImageUrl2"
+                            placeholder="Paste image URL 2">
+                        <input type="url" class="form-control mb-1" id="otherImageUrl3" name="otherImageUrl3"
+                            placeholder="Paste image URL 3">
+                        <div class="other-images-container mt-2"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blogTags" class="form-label">Tags (comma separated, optional)</label>
+                        <input type="text" class="form-control" id="blogTags" name="blogTags"
+                            placeholder="e.g. news, update, article">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Blog</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script type="module">
+        import { getAllBlogs, updateBlogPost } from '/assets/js/blogService.js';
+        // Helper to get query param
+        function getQueryParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+        const blogId = getQueryParam('id');
+        const quill = new Quill('#blogContent', {
+            theme: 'snow',
+            placeholder: 'Write your blog content here...'
+        });
+        async function loadBlog() {
+            const blogs = await getAllBlogs();
+            const blog = blogs.find(b => b.id === blogId);
+            if (!blog) {
+                alert('Blog not found');
+                return;
+            }
+            document.getElementById('blogTitle').value = blog.title || '';
+            document.getElementById('authorName').value = blog.author || '';
+            quill.root.innerHTML = blog.content || '';
+            document.getElementById('featuredImageUrl').value = blog.featuredImage || '';
+            document.getElementById('otherImageUrl1').value = blog.otherImages && blog.otherImages[0] ? blog.otherImages[0] : '';
+            document.getElementById('otherImageUrl2').value = blog.otherImages && blog.otherImages[1] ? blog.otherImages[1] : '';
+            document.getElementById('otherImageUrl3').value = blog.otherImages && blog.otherImages[2] ? blog.otherImages[2] : '';
+            document.getElementById('blogTags').value = blog.tags || '';
+        }
+        loadBlog();
+        document.getElementById('blogForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.getElementById('blogContentHtml').value = quill.root.innerHTML;
+            const formData = new FormData(this);
+            const blogData = {
+                title: formData.get('blogTitle'),
+                author: formData.get('authorName'),
+                content: formData.get('blogContentHtml'),
+                tags: formData.get('blogTags'),
+                featuredImage: formData.get('featuredImageUrl') || null,
+                otherImages: [
+                    formData.get('otherImageUrl1') || null,
+                    formData.get('otherImageUrl2') || null,
+                    formData.get('otherImageUrl3') || null
+                ].filter(Boolean)
+            };
+            try {
+                await updateBlogPost(blogId, blogData);
+                alert('Blog updated!');
+                window.location.href = 'allblogs.html';
+            } catch (error) {
+                alert('Failed to update blog.');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+
+</html>
