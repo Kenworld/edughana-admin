@@ -321,97 +321,59 @@ if (!window.location.pathname.includes("index.html")) {
           }
         });
 
-      // --- CATEGORY & SUBCATEGORY LOGIC ---
-      const categoryMap = {
-        "Classroom Furniture": [
-          "Student Desks",
-          "Student Chairs",
-          "Teacher Desks",
-          "Bookshelves",
-          "Whiteboards",
-          "Lockers",
-        ],
-        "Playground Equipment": [
-          "Slides",
-          "Swings",
-          "Merry-Go-Rounds",
-          "Jungle Gyms",
-          "Monkey Bars",
-          "Climbing Structures",
-        ],
-        "Indoor Play Items": [
-          "Play Kitchens",
-          "Activity Tables",
-          "Foam Blocks",
-          "Climbing Frames",
-        ],
-        "Outdoor Play Items": [
-          "Ride-on Toys",
-          "Playhouses",
-          "Sandpits",
-          "Seesaws",
-          "Trampolines",
-        ],
-        "Multipurpose Learning Zones": [
-          "Reading Corners",
-          "Sensory Play Zones",
-          "Art Stations",
-        ],
-        "Teacher & Admin Furniture": [
-          "Staff Chairs",
-          "Office Desks",
-          "Reception Counters",
-          "Storage Cabinets",
-        ],
-        "Cribs & Cradles": [
-          "Wooden Cribs",
-          "Metal Cradles",
-          "Baby Sleeping Mats",
-          "Bassinets",
-        ],
-        "Montessori Equipment": [
-          "Sandpaper Letters",
-          "Bead Frames",
-          "Puzzle Boards",
-          "Counting Trays",
-          "Learning Towers",
-        ],
-        Stationery: [
-          "Pens",
-          "Pencils",
-          "Notebooks",
-          "Markers",
-          "Folders",
-          "Erasers",
-        ],
-        "Digital Learning Tools": [
-          "Flat Panels and Interactive Whiteboards",
-          "Tablets",
-          "Desktops",
-          "All in One PCs",
-          "Educational Software",
-        ],
-        "Arts & Crafts": ["Crayons", "Paint", "Brushes", "Coloring Books"],
-        "Science Lab Equipment": ["Beakers", "Microscopes", "Lab Kits"],
-      };
+      // --- CATEGORY & SUBCATEGORY LOGIC (Firestore version) ---
       const categorySelect = document.getElementById("productCategory");
       const subcategorySelect = document.getElementById("productSubcategory");
-      categorySelect.addEventListener("change", function () {
-        const selected = this.value;
-        subcategorySelect.innerHTML =
+
+      async function populateCategoriesFromFirestore() {
+        categorySelect.innerHTML =
           '<option selected disabled value="">Choose...</option>';
-        if (categoryMap[selected]) {
-          categoryMap[selected].forEach((sub) => {
-            const opt = document.createElement("option");
-            opt.value = sub;
-            opt.textContent = sub;
-            subcategorySelect.appendChild(opt);
+        const categoriesSnapshot = await getDocs(collection(db, "categories"));
+        const categories = [];
+        categoriesSnapshot.forEach((doc) => {
+          const data = doc.data();
+          categories.push({
+            id: doc.id,
+            name: data.category,
+            subCategories: Array.isArray(data.subCategories)
+              ? data.subCategories
+              : [],
           });
-          subcategorySelect.disabled = false;
-        } else {
-          subcategorySelect.disabled = true;
-        }
-      });
+        });
+        // Populate category dropdown
+        categories.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat.name;
+          opt.textContent = cat.name;
+          opt.dataset.subcategories = JSON.stringify(cat.subCategories);
+          categorySelect.appendChild(opt);
+        });
+        // On change, populate subcategories
+        categorySelect.addEventListener("change", function () {
+          const selectedOption =
+            categorySelect.options[categorySelect.selectedIndex];
+          const subCategories = JSON.parse(
+            selectedOption.dataset.subcategories || "[]"
+          );
+          subcategorySelect.innerHTML =
+            '<option selected disabled value="">Choose...</option>';
+          if (subCategories.length > 0) {
+            subCategories.forEach((sub) => {
+              const opt = document.createElement("option");
+              opt.value = sub;
+              opt.textContent = sub;
+              subcategorySelect.appendChild(opt);
+            });
+            subcategorySelect.disabled = false;
+          } else {
+            subcategorySelect.disabled = true;
+          }
+        });
+      }
+      // Call on page load
+      if (window.location.pathname == "/addnew.html") {
+        populateCategoriesFromFirestore();
+      }
       // --- END CATEGORY & SUBCATEGORY LOGIC ---
     }
 
@@ -516,17 +478,93 @@ if (!window.location.pathname.includes("index.html")) {
       `;
       }
 
+      // --- EDIT MODAL CATEGORY & SUBCATEGORY LOGIC (Firestore version) ---
+      async function populateEditModalCategories(
+        selectedCategory,
+        selectedSubcategory
+      ) {
+        const editCategorySelect = document.getElementById(
+          "editProductCategory"
+        );
+        const editSubcategorySelect = document.getElementById(
+          "editProductSubcategory"
+        );
+        editCategorySelect.innerHTML =
+          '<option selected disabled value="">Choose...</option>';
+        const categoriesSnapshot = await getDocs(collection(db, "categories"));
+        const categories = [];
+        categoriesSnapshot.forEach((doc) => {
+          const data = doc.data();
+          categories.push({
+            id: doc.id,
+            name: data.category,
+            subCategories: Array.isArray(data.subCategories)
+              ? data.subCategories
+              : [],
+          });
+        });
+        // Populate category dropdown
+        categories.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat.name;
+          opt.textContent = cat.name;
+          opt.dataset.subcategories = JSON.stringify(cat.subCategories);
+          if (cat.name === selectedCategory) opt.selected = true;
+          editCategorySelect.appendChild(opt);
+        });
+        // Populate subcategory dropdown
+        const selectedCat = categories.find(
+          (cat) => cat.name === selectedCategory
+        );
+        editSubcategorySelect.innerHTML =
+          '<option selected disabled value="">Choose...</option>';
+        if (selectedCat && selectedCat.subCategories.length > 0) {
+          selectedCat.subCategories.forEach((sub) => {
+            const opt = document.createElement("option");
+            opt.value = sub;
+            opt.textContent = sub;
+            if (sub === selectedSubcategory) opt.selected = true;
+            editSubcategorySelect.appendChild(opt);
+          });
+          editSubcategorySelect.disabled = false;
+        } else {
+          editSubcategorySelect.disabled = true;
+        }
+        // On change, update subcategories
+        editCategorySelect.addEventListener("change", function () {
+          const selectedOption =
+            editCategorySelect.options[editCategorySelect.selectedIndex];
+          const subCategories = JSON.parse(
+            selectedOption.dataset.subcategories || "[]"
+          );
+          editSubcategorySelect.innerHTML =
+            '<option selected disabled value="">Choose...</option>';
+          if (subCategories.length > 0) {
+            subCategories.forEach((sub) => {
+              const opt = document.createElement("option");
+              opt.value = sub;
+              opt.textContent = sub;
+              editSubcategorySelect.appendChild(opt);
+            });
+            editSubcategorySelect.disabled = false;
+          } else {
+            editSubcategorySelect.disabled = true;
+          }
+        });
+      }
+      // --- END EDIT MODAL CATEGORY & SUBCATEGORY LOGIC ---
+
       // Function to open edit modal
       window.openEditModal = async function (productId) {
         try {
           const productDoc = await getDoc(doc(db, "products", productId));
           if (productDoc.exists()) {
             const product = productDoc.data();
-
             // Populate modal fields
             document.getElementById("editProductId").value = productId;
             document.getElementById("editProductName").value = product.name;
-            setEditProductCategoryAndSubcategory(
+            // Populate category and subcategory dynamically
+            await populateEditModalCategories(
               product.category,
               product.subcategory
             );
@@ -539,7 +577,6 @@ if (!window.location.pathname.includes("index.html")) {
               product.stock || "";
             document.getElementById("editProductFeatured").checked =
               product.isFeatured || false;
-
             // Show modal
             const editModal = new bootstrap.Modal(
               document.getElementById("editProductModal")
