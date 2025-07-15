@@ -10,6 +10,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDc7xbG23UV8JN-KKpsJydorSeNw6gaOwM",
@@ -25,7 +26,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-export { db, auth };
+const storage = getStorage(app);
+export { db, auth, storage };
 
 const logoutbtn = document.getElementById("logoutbtn");
 

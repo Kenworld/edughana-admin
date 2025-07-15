@@ -208,17 +208,25 @@ if (!window.location.pathname.includes("index.html")) {
       // Initialize product code on page load
       generateProductCode();
 
+      // Function to generate slug from product name
+      function generateSlug(name) {
+        return name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphen
+          .replace(/^-+|-+$/g, ""); // Trim leading/trailing hyphens
+      }
+
       // Handle product creation
       document
         .getElementById("saveProductBtn")
         .addEventListener("click", async () => {
           try {
             // Get form values
+            const productName = document.getElementById("productName").value;
             const productData = {
-              name: document.getElementById("productName").value,
-              lowercase_name: document
-                .getElementById("productName")
-                .value.toLowerCase(),
+              name: productName,
+              slug: generateSlug(productName),
+              lowercase_name: productName.toLowerCase(),
               category: document.getElementById("productCategory").value,
               subcategory: document.getElementById("productSubcategory").value,
               material: document.getElementById("productMaterial").value,

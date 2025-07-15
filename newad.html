@@ -191,249 +191,209 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-            <div class="container pt-4 px-4">
-                <h6 class="mb-4">All Blogs</h6>
-                <div class="container mb-3">
-                    <div class="row align-items-end">
-                        <div class="col-md-3">
-                            <label for="filterStartDate" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="filterStartDate">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filterEndDate" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="filterEndDate">
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary w-100 mt-3" id="applyFilterBtn">Apply Filter</button>
-                        </div>
-                        <div class="col-md-4 text-end">
-                            <div class="btn-group mt-3" role="group">
-                                <button class="btn btn-outline-secondary" id="prevPageBtn">Previous</button>
-                                <button class="btn btn-outline-secondary" id="nextPageBtn">Next</button>
+            <div class="container-fluid pt-4 px-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row g-4">
+                            <div class="col-sm-12 col-xl-12">
+                                <div class="bg-light rounded h-100 p-4">
+                                    <h6 class="mb-4">Ad Details Details</h6>
+                                    <form id="adForm">
+                                        <div class="mb-3">
+                                            <label for="adTitle" class="form-label">Ad Type</label>
+                                            <select class="form-select" name="adImageType" id="adImageType">
+                                                <option value="ad1">Ad 1 Large</option>
+                                                <option value="ad2">Ad 2</option>
+                                                <option value="ad3">Ad 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="adTitle" class="form-label">Ad Title</label>
+                                            <input type="text" class="form-control" id="adTitle" name="adTitle"
+                                                maxlength="30" required placeholder="Enter ad title (max 30 chars)">
+                                            <div class="form-text"><span id="titleCharCount">0</span>/30</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="adDescription" class="form-label">Description</label>
+                                            <input type="text" class="form-control" id="adDescription"
+                                                name="adDescription" maxlength="60" required
+                                                placeholder="Enter description (max 60 chars)">
+                                            <div class="form-text"><span id="descCharCount">0</span>/60</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="adTargetUrl" class="form-label">Target URL</label>
+                                            <input type="url" class="form-control" id="adTargetUrl" name="adTargetUrl"
+                                                required placeholder="Enter the URL this ad should link to">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Ad Image</label>
+                                            <div class="btn-group mb-2" role="group">
+                                                <input type="radio" class="btn-check" name="adImageType"
+                                                    id="adImageUpload" checked>
+                                                <label class="btn btn-outline-primary" for="adImageUpload">Upload
+                                                    File</label>
+                                                <input type="radio" class="btn-check" name="adImageType"
+                                                    id="adImageUrl">
+                                                <label class="btn btn-outline-primary" for="adImageUrl">Image
+                                                    URL</label>
+                                            </div>
+                                            <div id="adImageUploadContainer">
+                                                <input class="form-control" id="adImageFile" type="file"
+                                                    accept="image/*">
+                                            </div>
+                                            <div id="adImageUrlContainer" style="display: none;">
+                                                <input class="form-control" id="adImageUrlInput" type="url"
+                                                    placeholder="Enter image URL">
+                                            </div>
+                                            <div class="image-preview-container mt-2">
+                                                <label>Image Preview</label>
+                                                <div class="ad-image-preview"></div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center mt-4">
+                                            <button type="submit" class="btn btn-lg btn-success">Save Ad</button>
+                                        </div>
+                                    </form>
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row" id="blogList">
-
-
 
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Content End -->
+        <!-- Content End -->
 
 
     </div>
     </div>
 
     <!-- JavaScript Libraries -->
+    <script type="module" src="/assets/js/main.js"></script>
+    <script src="/assets/libs/jquery/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/tempusdominus/js/moment.min.js"></script>
+    <script src="/assets/libs/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            var spinner = document.getElementById('spinner');
-            if (spinner) {
-                spinner.classList.remove('show');
-                spinner.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="/assets/libs/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="/assets/libs/waypoints/waypoints.min.js"></script>
+    <script src="/assets/libs/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/assets/libs/chart/chart.min.js"></script>
+    <script src="/assets/libs/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
     <script type="module">
-        import { addBlogPost } from '/assets/js/blogService.js';
+        import { storage, db } from '/assets/js/firebase.js';
+        import { ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-        // Initialize Quill editor
-        const quill = new Quill('#blogContent', {
-            theme: 'snow',
-            placeholder: 'Write your blog content here...'
-        });
-
-        // Blog form submission handler
-        document.getElementById('blogForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            // Copy Quill HTML to hidden input
-            document.getElementById('blogContentHtml').value = quill.root.innerHTML;
-
-            // Collect form data
-            const formData = new FormData(this);
-            // Add Quill content explicitly (for demonstration)
-            formData.set('blogContentHtml', quill.root.innerHTML);
-
-            // Prepare blog data object
-            const blogData = {
-                title: formData.get('blogTitle'),
-                author: formData.get('authorName'),
-                content: formData.get('blogContentHtml'),
-                tags: formData.get('blogTags'),
-                featuredImage: formData.get('featuredImageUrl') || null,
-                otherImages: [
-                    formData.get('otherImageUrl1') || null,
-                    formData.get('otherImageUrl2') || null,
-                    formData.get('otherImageUrl3') || null
-                ].filter(Boolean)
-            };
-
-            // Optionally, handle file uploads here (not implemented)
-
-            try {
-                const docId = await addBlogPost(blogData);
-                alert('Blog post published! (ID: ' + docId + ')');
-                this.reset();
-                quill.setContents([]);
-            } catch (error) {
-                console.error('Error publishing blog:', error);
-                alert('Failed to publish blog. See console for details.');
+        // All custom logic inside DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', () => {
+            // Ad form character counters
+            const adTitle = document.getElementById('adTitle');
+            const adDescription = document.getElementById('adDescription');
+            adTitle.addEventListener('input', function () {
+                document.getElementById('titleCharCount').textContent = this.value.length;
+            });
+            adDescription.addEventListener('input', function () {
+                document.getElementById('descCharCount').textContent = this.value.length;
+            });
+            // Toggle between file upload and URL input for ad image
+            const adImageUpload = document.getElementById('adImageUpload');
+            const adImageUrl = document.getElementById('adImageUrl');
+            const adImageUploadLabel = document.querySelector('label[for="adImageUpload"]');
+            const adImageUrlLabel = document.querySelector('label[for="adImageUrl"]');
+            function updateAdImageInput() {
+                if (adImageUpload.checked) {
+                    document.getElementById('adImageUploadContainer').style.display = 'block';
+                    document.getElementById('adImageUrlContainer').style.display = 'none';
+                    document.querySelector('.ad-image-preview').innerHTML = '';
+                } else if (adImageUrl.checked) {
+                    document.getElementById('adImageUploadContainer').style.display = 'none';
+                    document.getElementById('adImageUrlContainer').style.display = 'block';
+                    document.querySelector('.ad-image-preview').innerHTML = '';
+                }
             }
-        });
-
-        // Toggle between file upload and URL input for featured image
-        document.getElementById('featuredUpload').addEventListener('change', function () {
-            document.getElementById('featuredUploadContainer').style.display = 'block';
-            document.getElementById('featuredUrlContainer').style.display = 'none';
-        });
-
-        document.getElementById('featuredUrl').addEventListener('change', function () {
-            document.getElementById('featuredUploadContainer').style.display = 'none';
-            document.getElementById('featuredUrlContainer').style.display = 'block';
-        });
-
-        // Toggle between file upload and URL input for other images
-        document.getElementById('otherUpload').addEventListener('change', function () {
-            document.getElementById('otherUploadContainer').style.display = 'block';
-            document.getElementById('otherUrlContainer').style.display = 'none';
-        });
-
-        document.getElementById('otherUrl').addEventListener('change', function () {
-            document.getElementById('otherUploadContainer').style.display = 'none';
-            document.getElementById('otherUrlContainer').style.display = 'block';
-        });
-
-        // Handle featured image URL input
-        document.getElementById('featuredImageUrl').addEventListener('input', function () {
-            const url = this.value;
-            if (url) {
-                const preview = document.querySelector('.featured-preview');
-                preview.innerHTML = `
-                    <img src="${url}" alt="Featured Preview" style="max-width: 100%; max-height: 200px;">
-                    <button class="remove-image" onclick="removeFeaturedImage()">&times;</button>
-                `;
-            }
-        });
-
-        // Handle other images URL inputs
-        ['otherImageUrl1', 'otherImageUrl2', 'otherImageUrl3'].forEach(id => {
-            document.getElementById(id).addEventListener('input', function () {
+            adImageUpload.addEventListener('change', updateAdImageInput);
+            adImageUrl.addEventListener('change', updateAdImageInput);
+            adImageUploadLabel.addEventListener('click', () => {
+                setTimeout(updateAdImageInput, 0);
+            });
+            adImageUrlLabel.addEventListener('click', () => {
+                setTimeout(updateAdImageInput, 0);
+            });
+            // Set initial state
+            updateAdImageInput();
+            // Preview for file upload
+            const adImageFile = document.getElementById('adImageFile');
+            adImageFile.addEventListener('change', function () {
+                const file = this.files[0];
+                const preview = document.querySelector('.ad-image-preview');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Ad Preview" style="max-width: 100%; max-height: 200px;">`;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.innerHTML = '';
+                }
+            });
+            // Preview for URL
+            const adImageUrlInput = document.getElementById('adImageUrlInput');
+            adImageUrlInput.addEventListener('input', function () {
                 const url = this.value;
+                const preview = document.querySelector('.ad-image-preview');
                 if (url) {
-                    const container = document.querySelector('.other-images-container');
-                    const existingPreview = container.querySelector(`[data-url-input="${id}"]`);
-
-                    if (existingPreview) {
-                        existingPreview.querySelector('img').src = url;
-                    } else {
-                        const previewDiv = document.createElement('div');
-                        previewDiv.className = 'other-image-preview';
-                        previewDiv.setAttribute('data-url-input', id);
-                        previewDiv.innerHTML = `
-                            <img src="${url}" alt="Other Preview" style="max-width: 100%; max-height: 150px;">
-                            <button class="remove-image" onclick="removeOtherImage(this)">&times;</button>
-                        `;
-                        container.appendChild(previewDiv);
-                    }
+                    preview.innerHTML = `<img src="${url}" alt="Ad Preview" style="max-width: 100%; max-height: 200px;">`;
+                } else {
+                    preview.innerHTML = '';
+                }
+            });
+            // Handle form submit
+            const adForm = document.getElementById('adForm');
+            adForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const adType = document.getElementById('adImageType').value;
+                const title = adTitle.value.trim();
+                const description = adDescription.value.trim();
+                const targetUrl = document.getElementById('adTargetUrl').value.trim();
+                let imageUrl = '';
+                // Determine which image input is selected
+                if (adImageUpload.checked && adImageFile.files.length > 0) {
+                    // Upload file to Firebase Storage
+                    const file = adImageFile.files[0];
+                    const fileRef = storageRef(storage, 'ads/' + Date.now() + '_' + file.name);
+                    await uploadBytes(fileRef, file);
+                    imageUrl = await getDownloadURL(fileRef);
+                } else if (adImageUrl.checked && adImageUrlInput.value) {
+                    imageUrl = adImageUrlInput.value.trim();
+                }
+                // Save to Firestore
+                try {
+                    await addDoc(collection(db, 'ads'), {
+                        adType,
+                        title,
+                        description,
+                        targetUrl,
+                        imageUrl,
+                        createdAt: new Date()
+                    });
+                    alert('Ad saved successfully!');
+                    adForm.reset();
+                    document.querySelector('.ad-image-preview').innerHTML = '';
+                    document.getElementById('titleCharCount').textContent = '0';
+                    document.getElementById('descCharCount').textContent = '0';
+                    // Reset to file upload by default
+                    adImageUpload.checked = true;
+                    adImageUpload.dispatchEvent(new Event('change'));
+                } catch (err) {
+                    alert('Error saving ad: ' + err.message);
                 }
             });
         });
-    </script>
-    <script type="module">
-        import { getBlogsFiltered, deleteBlogPost } from '/assets/js/blogService.js';
-
-        let lastDoc = null;
-        let pageStack = [];
-        let currentFilter = { startDate: null, endDate: null };
-        const BLOGS_PER_PAGE = 6;
-
-        async function renderBlogs({ startAfterDoc = null, direction = 'next' } = {}) {
-            const blogList = document.getElementById('blogList');
-            blogList.innerHTML = '';
-            let startDate = currentFilter.startDate ? new Date(currentFilter.startDate) : null;
-            let endDate = currentFilter.endDate ? new Date(currentFilter.endDate) : null;
-            if (endDate) endDate.setHours(23, 59, 59, 999); // include full end day
-            try {
-                const { blogs, lastDoc: newLastDoc } = await getBlogsFiltered({
-                    startDate: startDate ? startDate : undefined,
-                    endDate: endDate ? endDate : undefined,
-                    limit: BLOGS_PER_PAGE,
-                    startAfterDoc: startAfterDoc
-                });
-                if (direction === 'next' && lastDoc) pageStack.push(lastDoc);
-                if (direction === 'prev') pageStack.pop();
-                lastDoc = newLastDoc;
-                if (blogs.length === 0) {
-                    blogList.innerHTML = '<div class="col-12 text-center text-muted">No blogs found.</div>';
-                    return;
-                }
-                blogs.forEach(blog => {
-                    const card = document.createElement('div');
-                    card.className = 'col-md-4 mb-4';
-                    card.innerHTML = `
-                <div class="card h-100">
-                    ${blog.featuredImage ? `<img src="${blog.featuredImage}" class="card-img-top" alt="Featured">` : ''}
-                    <div class="card-body">
-                        <h5 class="card-title">${blog.title || ''}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">${blog.author || ''}</h6>
-                        <div class="card-text" style="max-height:100px;overflow:auto;">${blog.content ? blog.content.substring(0, 200) + (blog.content.length > 200 ? '...' : '') : ''}</div>
-                        <div class="mt-2">
-                            <span class="badge bg-secondary">${blog.tags || ''}</span>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        <button class="btn btn-sm btn-warning" onclick="window.location.href='editblog.html?id=${blog.id}'">Edit</button>
-                        <button class="btn btn-sm btn-danger" data-id="${blog.id}">Delete</button>
-                    </div>
-                </div>
-            `;
-                    blogList.appendChild(card);
-                });
-                // Attach delete handlers
-                blogList.querySelectorAll('.btn-danger[data-id]').forEach(btn => {
-                    btn.addEventListener('click', async function () {
-                        const blogId = this.getAttribute('data-id');
-                        if (confirm('Are you sure you want to delete this blog post?')) {
-                            try {
-                                await deleteBlogPost(blogId);
-                                alert('Blog deleted!');
-                                renderBlogs({ startAfterDoc: pageStack.length ? pageStack[pageStack.length - 1] : null, direction: 'current' });
-                            } catch (err) {
-                                alert('Failed to delete blog.');
-                                console.error(err);
-                            }
-                        }
-                    });
-                });
-                // Enable/disable pagination buttons
-                document.getElementById('prevPageBtn').disabled = pageStack.length === 0;
-                document.getElementById('nextPageBtn').disabled = !lastDoc;
-            } catch (err) {
-                blogList.innerHTML = '<div class="col-12 text-danger">Failed to load blogs.</div>';
-                console.error(err);
-            }
-        }
-
-        document.getElementById('applyFilterBtn').addEventListener('click', () => {
-            currentFilter.startDate = document.getElementById('filterStartDate').value;
-            currentFilter.endDate = document.getElementById('filterEndDate').value;
-            lastDoc = null;
-            pageStack = [];
-            renderBlogs();
-        });
-        document.getElementById('prevPageBtn').addEventListener('click', () => {
-            renderBlogs({ startAfterDoc: pageStack.length > 1 ? pageStack[pageStack.length - 2] : null, direction: 'prev' });
-        });
-        document.getElementById('nextPageBtn').addEventListener('click', () => {
-            renderBlogs({ startAfterDoc: lastDoc, direction: 'next' });
-        });
-
-        renderBlogs();
     </script>
 
 </body>
